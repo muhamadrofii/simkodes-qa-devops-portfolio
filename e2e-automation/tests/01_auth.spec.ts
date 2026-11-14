@@ -11,7 +11,6 @@ test.describe('E2E - Modul Autentikasi SIMKODES', () => {
     await expect(loginPage.emailInput).toBeVisible();
     await expect(loginPage.passwordInput).toBeVisible();
     await expect(loginPage.submitButton).toBeVisible();
-    await expect(loginPage.directLoginBtn).toBeVisible();
   });
 
   test('Harus menolak login jika password salah', async ({ page }) => {
@@ -49,17 +48,6 @@ test.describe('E2E - Modul Autentikasi SIMKODES', () => {
     await loginPage.goto();
 
     await loginPage.login('admin@test.com', 'password123');
-    await page.waitForURL('**/dashboard');
-    await expect(page).toHaveURL(/.*dashboard/);
-
-    const dashboardPage = new DashboardPage(page);
-    await dashboardPage.assertDashboardLoaded();
-  });
-
-  test('Harus dapat login instan menggunakan shortcut direct-login', async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    await loginPage.quickLogin();
-
     await page.waitForURL('**/dashboard');
     await expect(page).toHaveURL(/.*dashboard/);
 

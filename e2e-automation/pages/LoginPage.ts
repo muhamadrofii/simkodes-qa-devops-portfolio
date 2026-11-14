@@ -10,7 +10,6 @@ export class LoginPage {
   readonly submitButton: Locator;
   readonly headingTitle: Locator;
   readonly alertError: Locator;
-  readonly directLoginBtn: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -20,7 +19,6 @@ export class LoginPage {
     this.submitButton = page.locator('button[type="submit"]');
     this.headingTitle = page.locator('h4:has-text("Masuk ke SIMKODES")');
     this.alertError = page.locator('.alert-danger');
-    this.directLoginBtn = page.locator('a:has-text("Masuk Otomatis")');
   }
 
   /**
@@ -38,13 +36,6 @@ export class LoginPage {
     await this.emailInput.fill(email);
     await this.passwordInput.fill(pass);
     await this.submitButton.click();
-  }
-
-  /**
-   * Jalankan bypass login instan
-   */
-  async quickLogin() {
-    await this.page.goto('/direct-login');
   }
 
   /**
