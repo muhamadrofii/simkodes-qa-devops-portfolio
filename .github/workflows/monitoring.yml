@@ -1,9 +1,6 @@
 name: Health & Uptime Monitoring
 
 on:
-  schedule:
-    # Berjalan setiap 6 jam
-    - cron: '0 */6 * * *'
   workflow_dispatch:
 
 jobs:

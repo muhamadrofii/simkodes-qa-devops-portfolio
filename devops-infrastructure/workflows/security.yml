@@ -1,0 +1,61 @@
+name: Security Scanning & Dependency Audit
+
+on:
+  push:
+    branches:
+      - master
+      - staging
+  pull_request:
+    branches:
+      - master
+      - staging
+  schedule:
+    # Berjalan mingguan setiap hari Senin pukul 03:00 UTC (10:00 WIB)
+    - cron: '0 3 * * 1'
+  workflow_dispatch:
+
+jobs:
+  security-audit:
+    name: Dependency Vulnerability Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: 1. Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 2. Setup PHP 8.2
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: none
+
+      - name: 3. Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 4. Audit Composer Packages (PHP)
+        id: composer_audit
+        continue-on-error: true
+        run: |
+          echo "Menjalankan audit paket Composer berdasarkan composer.lock..."
+          composer audit --locked
+
+      - name: 5. Audit NPM Packages (JavaScript/Vite)
+        id: npm_audit
+        continue-on-error: true
+        run: |
+          echo "Menjalankan audit dependensi NPM..."
+          npm audit --audit-level=high
+
+      - name: 6. Catat Ringkasan Keamanan
+        if: always()
+        run: |
+          echo "### 🛡️ Dependency Security Scan Report" >> $GITHUB_STEP_SUMMARY
+          echo "- **Composer Audit:** ${{ steps.composer_audit.outcome == 'success' && '🟢 Lulus (0 Kerentanan)' || '⚠️ Ditemukan Catatan Kerentanan (Periksa log step 4)' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **NPM Audit:** ${{ steps.npm_audit.outcome == 'success' && '🟢 Lulus (0 Kerentanan High/Critical)' || '⚠️ Ditemukan Catatan Kerentanan (Periksa log step 5)' }}" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "${{ steps.composer_audit.outcome }}" != "success" ] || [ "${{ steps.npm_audit.outcome }}" != "success" ]; then
+            echo "::warning::Audit menemukan kerentanan pada paket dependensi. Disarankan menjalankan composer update / npm audit fix secara berkala."
+          fi

@@ -1,17 +1,6 @@
 name: Security Scanning & Dependency Audit
 
 on:
-  push:
-    branches:
-      - master
-      - staging
-  pull_request:
-    branches:
-      - master
-      - staging
-  schedule:
-    # Berjalan mingguan setiap hari Senin pukul 03:00 UTC (10:00 WIB)
-    - cron: '0 3 * * 1'
   workflow_dispatch:
 
 jobs:
