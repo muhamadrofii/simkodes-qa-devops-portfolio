@@ -2,7 +2,7 @@
 
 [![Playwright](https://img.shields.io/badge/Playwright-E2E%20Testing-2EAD33?style=flat-square&logo=playwright&logoColor=white)](https://playwright.dev/)
 [![PHPUnit](https://img.shields.io/badge/PHPUnit-79%20Tests%20Passed-3775A9?style=flat-square&logo=php&logoColor=white)](https://phpunit.de/)
-[![GitHub Actions](https://img.shields.io/badge/CI%2FCD-7%20Workflows-2088FF?style=flat-square&logo=githubactions&logoColor=white)](.github/workflows/)
+[![GitHub Actions](https://img.shields.io/badge/CI%2FCD-8%20Workflows-2088FF?style=flat-square&logo=githubactions&logoColor=white)](.github/workflows/)
 [![K6 Load Testing](https://img.shields.io/badge/K6-Load%20Tested-7D64FF?style=flat-square&logo=k6&logoColor=white)](performance-testing/)
 [![Security Audit](https://img.shields.io/badge/Security-Composer%20%26%20NPM%20Audit-2ea44f?style=flat-square&logo=shield&logoColor=white)](security-audit/)
 [![Sentry](https://img.shields.io/badge/Monitoring-Sentry%20Tracked-362D59?style=flat-square&logo=sentry&logoColor=white)](https://sentry.io/)
@@ -19,7 +19,7 @@ A portfolio case study covering test automation, database query optimization, an
 | **Backend Testing** | 79 PHPUnit tests (Unit, Feature, API) covering authentication, CRUD, file uploads, and PDF generation. |
 | **Database Optimization** | Eliminated N+1 query bottlenecks on member listings (reduced from 11 queries to 2 constant queries, -81.8%). Added B-tree and composite indexing. |
 | **Load Testing** | Benchmarked with K6 at 100 concurrent virtual users: P95 latency of **142 ms**, average **64 ms**, 0% error rate. |
-| **CI/CD Architecture** | 7 modular GitHub Actions workflows covering CI quality gate, Staging deploy with Basic Auth, guarded Production deploy, maintenance toggle, weekly backups, dependency scanning, and uptime monitoring. |
+| **CI/CD Architecture** | 8 modular GitHub Actions workflows covering CI quality gate, Staging deploy with Basic Auth, guarded Production deploy, dedicated database seeder operations, maintenance toggle, weekly backups, dependency scanning, and uptime monitoring. |
 | **Infrastructure** | Hostinger LiteSpeed Shared Hosting automation: handled PHP `symlink()` restrictions via Linux shell, injected dynamic HTTP Basic Auth, and automated SSH over custom port 65002. |
 | **Security** | Audited dependencies using `composer audit --locked` and `npm audit`. Resolved 5 high-severity frontend CVEs via `npm audit fix`. |
 | **Observability** | Integrated Sentry Cloud for real-time error tracking and configured automated HTTP status pings every 6 hours. |
@@ -149,7 +149,7 @@ Added composite indexes to frequently queried columns:
 
 ## 3. CI/CD Architecture (GitHub Actions)
 
-The deployment pipeline is split into 7 modular workflows:
+The deployment pipeline is split into 8 modular workflows:
 
 ```mermaid
 flowchart TD
@@ -171,6 +171,7 @@ flowchart TD
         WEEKLY["Weekly Cron"] --> BCK["backup.yml (MySQL Dump to Artifacts)"]
         CRON_6H["Every 6 Hours"] --> MON["monitoring.yml (HTTP Ping)"]
         MANUAL_OPS["Manual Trigger"] --> MAINT["maintenance.yml (Artisan Down/Up)"]
+        MANUAL_OPS --> SEED["db-seed.yml (On-Demand Database Seeding)"]
     end
 ```
 
