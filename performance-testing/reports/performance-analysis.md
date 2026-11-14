@@ -1,55 +1,55 @@
-# ⚡ Performance Engineering & Benchmark Analysis Report
+# Database Performance & Load Test Benchmark Report
 
 **Project**: SIMKODES (Sistem Informasi Manajemen Koperasi Desa Sranak)  
-**Lead Engineer**: Muhamad Rofii (QA & DevOps Specialist)  
-**Target Environment**: Staging & Production Ready  
-**Date**: November 2026
+**Author**: Muhamad Rofii  
+**Date**: November 2026  
 
 ---
 
-## 🎯 Executive Summary
-Laporan ini merinci optimasi performa backend, database, dan antarmuka web SIMKODES untuk menjamin sistem mampu menangani lonjakan akses serentak warga desa saat pencairan subsidi maupun pengelolaan ribuan data anggota koperasi secara efisien tanpa degradasi latensi (*zero latency spike*).
+## Summary
 
-### Metrik Kunci Keberhasilan:
-- **Pengurangan Query Database**: Turun **81.8%** (dari 11 query menjadi 2 query terproyeksi per request list anggota).
-- **Latency P95**: **142 ms** pada beban 100 Virtual Users (VU) simultan (Threshold target: $<500\text{ ms}$).
-- **Throughput Rata-Rata**: **185 Requests/sec (RPS)** tanpa *memory leak*.
-- **Tingkat Kegagalan HTTP**: **0.00%** (zero failed requests).
+This report documents query profiling, database indexing improvements, and load testing results for SIMKODES.
+
+### Key Metrics
+- **Database Query Reduction**: **-81.8%** (from 11 queries to 2 constant queries for paginated member listings).
+- **P95 Response Time**: **142.8 ms** under 100 concurrent virtual users (target: $< 500\text{ ms}$).
+- **Average Response Time**: **64.12 ms**.
+- **Error Rate**: **0.00%** across 4,820 total requests.
 
 ---
 
-## 🔍 1. Eliminasi Masalah N+1 Query (SQL Optimization)
+## 1. N+1 Query Elimination
 
-### A. Diagnosa Awal (Penyakit N+1)
-Pada implementasi awal, pengambilan 10 data anggota beserta relasi kategorinya mengeksekusi 1 query untuk mengambil daftar anggota, diikuti oleh 10 query individual terpisah untuk setiap kategori:
-$$\text{Total Query} = 1 + N = 11 \text{ Query SQL}$$
+### The Problem
+Fetching 10 members with their associated category originally executed one query for the members list, followed by 10 separate queries for each member's category relation:
+$$\text{Total Queries} = 1 + N = 11 \text{ queries}$$
 
-Jika anggota berjumlah 1.000 orang, sistem akan membombardir database dengan 1.001 query, mengakibatkan beban koneksi database membengkak drastis.
+With larger page sizes (e.g. 50 or 100 members), query execution scaled linearly, causing database connection overhead.
 
-### B. Solusi Rekayasa: Eager Loading Terproyeksi
-Implementasi eager loading menggunakan `with(['category:id,name'])`:
+### The Fix
+Implemented Eloquent eager loading with specific column projections:
 ```php
 $members = Member::with(['category:id,name'])
     ->select(['id', 'category_id', 'nama', 'jenis_kelamin', 'mata_pencaharian', 'tempat_tinggal', 'tanggal_masuk', 'created_at'])
     ->paginate(10);
 ```
 
-### C. Pembuktian Efisiensi ([QueryEfficiencyTest.php](file:///c:/code/sranak/simkodes/tests/Feature/Api/QueryEfficiencyTest.php))
-Pengujian otomatis memvalidasi bahwa query SQL yang dieksekusi **selalu konstan = 2 Query**:
+### Verification (`QueryEfficiencyTest.php`)
+Automated tests verify that the SQL query count remains constant at **2 queries** regardless of dataset size:
 1. `SELECT [columns] FROM members LIMIT 10 OFFSET 0;`
 2. `SELECT id, name FROM categories WHERE id IN (1, 2, 3);`
 
-| Skenario Pengujian | Query Sebelum Optimasi | Query Pasca Optimasi | Efisiensi |
+| Scenario | Queries Before | Queries After | Reduction |
 | :--- | :---: | :---: | :---: |
-| List 10 Anggota | 11 Query | **2 Query** | **-81.8%** |
-| List 50 Anggota | 51 Query | **2 Query** | **-96.1%** |
-| List 100 Anggota | 101 Query | **2 Query** | **-98.0%** |
+| 10 Members | 11 | **2** | **-81.8%** |
+| 50 Members | 51 | **2** | **-96.1%** |
+| 100 Members | 101 | **2** | **-98.0%** |
 
 ---
 
-## 🗄️ 2. Database Indexing Architecture
+## 2. Database Indexing
 
-Untuk mempercepat query pencarian (*search filter*) dan sorting pada tabel berukuran besar, indeks komposit dan b-tree ditambahkan pada kolom-kolom kritis:
+Added composite and single-column indexes on high-frequency search and filter columns:
 
 ```sql
 -- Migration: 2026_11_12_000001_add_indexes_for_performance.php
@@ -58,15 +58,15 @@ ALTER TABLE inventories ADD INDEX idx_inventories_nama (nama_barang);
 ALTER TABLE subsidies ADD INDEX idx_subsidies_nik (nik);
 ```
 
-**Dampak Eksekusi Query**:
-- Waktu pencarian nama anggota dengan kondisi `LIKE 'Budi%'`: Turun dari **68 ms** $\rightarrow$ **4 ms** (*index range scan*).
-- Pengecekan NIK subsidi mandiri: Turun dari **45 ms** $\rightarrow$ **1.2 ms** (*unique index point lookup*).
+**Measured Execution Times**:
+- Member search query (`WHERE nama LIKE 'Budi%'`): dropped from **68 ms** to **4 ms** via index range scan.
+- Public NIK subsidy lookup (`WHERE nik = '...'`): dropped from **45 ms** to **1.2 ms** via point lookup.
 
 ---
 
-## 📈 3. Hasil Pengujian Beban (K6 Load & Stress Test)
+## 3. Load Test Results (K6)
 
-Pengujian beban dilakukan menggunakan script [k6-load-test.js](../k6-load-test.js) dengan profil bertahap hingga **100 Virtual Users (VU)** selama 2 menit 30 detik:
+Ran `k6 run performance-testing/k6-load-test.js` ramping up to **100 concurrent Virtual Users (VUs)** over 2 minutes 30 seconds against the staging environment:
 
 ```text
           /\      |‾‾| /‾‾/   /‾‾/   
@@ -101,9 +101,9 @@ Pengujian beban dilakukan menggunakan script [k6-load-test.js](../k6-load-test.j
      vus_max........................: 100     min=100     max=100
 ```
 
-### Kesimpulan Metrik:
-* **Average Latency**: **64.12 ms**
-* **Median Latency (P50)**: **48.6 ms**
-* **95th Percentile (P95)**: **142.8 ms**
-* **Error Rate**: **0.00%**
-* Sistem stabil dan sangat siap melayani kebutuhan operasional harian koperasi desa.
+### Results Summary
+- **Average Duration**: 64.12 ms
+- **Median (P50)**: 48.60 ms
+- **90th Percentile (P90)**: 112.40 ms
+- **95th Percentile (P95)**: 142.80 ms
+- **Error Rate**: 0.00% across all endpoints

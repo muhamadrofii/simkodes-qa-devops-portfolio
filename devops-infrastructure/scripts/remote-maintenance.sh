@@ -2,8 +2,8 @@
 set -e
 
 # ==============================================================================
-# Script Kontrol Mode Pemeliharaan (Maintenance Mode) Remote SIMKODES
-# Mengaktifkan/menonaktifkan maintenance dengan bypass secret token & 503 retry header
+# Remote Maintenance Mode Controller for SIMKODES
+# Toggles artisan down / up with secret bypass token and Retry-After header
 # ==============================================================================
 
 ACTION="${1:-status}"
@@ -21,29 +21,29 @@ fi
 
 case "$ACTION" in
     down)
-        echo "🚨 Mengaktifkan Maintenance Mode untuk $TARGET..."
+        echo "Enabling maintenance mode on $TARGET..."
         cd "$APP_PATH"
         php artisan down --secret="$SECRET" --retry="$RETRY_AFTER" --status=503 --render="errors::503" || php artisan down --secret="$SECRET"
-        echo "✅ Mode Pemeliharaan AKTIF."
-        echo "🔑 URL Akses Khusus Tim: https://$DOMAIN/?secret=$SECRET"
+        echo "Maintenance mode enabled."
+        echo "Bypass URL: https://$DOMAIN/?secret=$SECRET"
         ;;
     up)
-        echo "🟢 Menonaktifkan Maintenance Mode untuk $TARGET..."
+        echo "Disabling maintenance mode on $TARGET..."
         cd "$APP_PATH"
         php artisan up
-        echo "✅ Sistem SIMKODES $TARGET kembali ONLINE."
+        echo "Application is now online."
         ;;
     status)
-        echo "ℹ️  Memeriksa status aplikasi di $APP_PATH..."
+        echo "Checking application status in $APP_PATH..."
         cd "$APP_PATH"
         if [ -f storage/framework/down ]; then
-            echo "🔴 Status: Sistem sedang dalam mode MAINTENANCE."
+            echo "Status: MAINTENANCE"
         else
-            echo "🟢 Status: Sistem ONLINE normal."
+            echo "Status: ONLINE"
         fi
         ;;
     *)
-        echo "Penggunaan: $0 {down|up|status} [staging|production] [secret_token] [retry_seconds]"
+        echo "Usage: $0 {down|up|status} [staging|production] [secret_token] [retry_seconds]"
         exit 1
         ;;
 esac

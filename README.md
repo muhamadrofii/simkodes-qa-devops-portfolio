@@ -1,118 +1,102 @@
-<div align="center">
+# SIMKODES: QA Automation & DevOps Engineering Portfolio
 
-# 🚀 Enterprise QA Automation & DevOps Engineering Portfolio
-### Case Study: SIMKODES (Sistem Informasi Manajemen Koperasi Desa Sranak)
+[![Playwright](https://img.shields.io/badge/Playwright-E2E%20Testing-2EAD33?style=flat-square&logo=playwright&logoColor=white)](https://playwright.dev/)
+[![PHPUnit](https://img.shields.io/badge/PHPUnit-79%20Tests%20Passed-3775A9?style=flat-square&logo=php&logoColor=white)](https://phpunit.de/)
+[![GitHub Actions](https://img.shields.io/badge/CI%2FCD-7%20Workflows-2088FF?style=flat-square&logo=githubactions&logoColor=white)](.github/workflows/)
+[![K6 Load Testing](https://img.shields.io/badge/K6-Load%20Tested-7D64FF?style=flat-square&logo=k6&logoColor=white)](performance-testing/)
+[![Security Audit](https://img.shields.io/badge/Security-Composer%20%26%20NPM%20Audit-2ea44f?style=flat-square&logo=shield&logoColor=white)](security-audit/)
+[![Sentry](https://img.shields.io/badge/Monitoring-Sentry%20Tracked-362D59?style=flat-square&logo=sentry&logoColor=white)](https://sentry.io/)
 
-*Showcase Portofolio Rekayasa Kualitas Perangkat Lunak (QA Automation), Continuous Integration & Deployment (CI/CD), Optimasi Performa Database, dan Infrastruktur DevOps Berstandar Industri.*
-
-[![Playwright](https://img.shields.io/badge/Playwright-E2E%20Automation-2EAD33?style=for-the-badge&logo=playwright&logoColor=white)](https://playwright.dev/)
-[![PHPUnit](https://img.shields.io/badge/PHPUnit-79%20Tests%20Passed-3775A9?style=for-the-badge&logo=php&logoColor=white)](https://phpunit.de/)
-[![GitHub Actions](https://img.shields.io/badge/CI%2FCD-7%20Modular%20Workflows-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)](.github/workflows/)
-[![K6 Load Testing](https://img.shields.io/badge/K6-Performance%20Tested-7D64FF?style=for-the-badge&logo=k6&logoColor=white)](performance-testing/)
-[![Security Scan](https://img.shields.io/badge/Security-Composer%20%26%20NPM%20Audit-success?style=for-the-badge&logo=shield&logoColor=white)](security-audit/)
-[![Sentry](https://img.shields.io/badge/Sentry-Cloud%20Monitored-362D59?style=for-the-badge&logo=sentry&logoColor=white)](https://sentry.io/)
-
-<br/>
-
-![Hero Showcase](assets/screenshots/01_landing_page.png)
+A portfolio case study covering test automation, database query optimization, and CI/CD deployment automation for **SIMKODES** (Sistem Informasi Manajemen Koperasi Desa Sranak) — a Laravel 11 ERP and public service web application.
 
 ---
 
-### 👨‍💻 Engineer Profile
-**Role**: Senior QA Automation & DevOps / SRE Engineer  
-**Core Competencies**: End-to-End Test Automation (Page Object Model), API Testing, SQL Optimization (Anti N+1), CI/CD Pipeline Architecture, Cloud Security Hardening, Zero-Downtime Deployment, SRE & Observability.
+## Overview
 
-</div>
-
----
-
-## 📊 Metrik Kunci Keberhasilan Rekayasa (Key Engineering Metrics)
-
-| Metrik Kualitas & Performa | Nilai Tercapai | Keterangan & Dampak Bisnis |
-| :--- | :---: | :--- |
-| **Cakupan Pengujian Otomatis** | **91 Tests (100% PASS)** | 79 PHPUnit (Unit, Feature, API) + 12 Playwright E2E browser tests. |
-| **Pencegahan N+1 Query SQL** | **-81.8% Query Load** | Mengurangi beban query list anggota dari 11 query menjadi 2 query konstan. |
-| **P95 Latency (K6 Load Test)** | **142 ms** | Diuji pada beban 100 Virtual Users (VU) simultan (Threshold target $<500\text{ ms}$). |
-| **Tingkat Kegagalan HTTP (Load)**| **0.00% Error Rate** | 4,820 permintaan HTTP berturut-turut selesai tanpa kegagalan koneksi. |
-| **Arsitektur CI/CD Pipeline** | **7 Modular Workflows** | Terpisah bersih: CI, Staging CD, Production CD, Backup, Maintenance, Security, Monitoring. |
-| **Keamanan Dependensi (CVE)** | **5 CVE Patched** | Penambalan kerentanan level *High* pada frontend via `npm audit fix` & audit Composer terjadwal. |
-| **Disaster Recovery (RPO/RTO)** | **Retensi 30 Hari** | Pencadangan otomatis database MySQL mingguan ke GitHub Actions Artifacts terenkripsi. |
-| **Uptime & Error Tracking** | **99.9% Monitored** | Health check berkala tiap 6 jam + integrasi event error real-time Sentry Cloud (`SIMKODES-1`). |
+| Area | Implementation & Results |
+| :--- | :--- |
+| **E2E Automation** | 12 browser scenarios automated with Playwright (TypeScript) using Page Object Model (POM). |
+| **Backend Testing** | 79 PHPUnit tests (Unit, Feature, API) covering authentication, CRUD, file uploads, and PDF generation. |
+| **Database Optimization** | Eliminated N+1 query bottlenecks on member listings (reduced from 11 queries to 2 constant queries, -81.8%). Added B-tree and composite indexing. |
+| **Load Testing** | Benchmarked with K6 at 100 concurrent virtual users: P95 latency of **142 ms**, average **64 ms**, 0% error rate. |
+| **CI/CD Architecture** | 7 modular GitHub Actions workflows covering CI quality gate, Staging deploy with Basic Auth, guarded Production deploy, maintenance toggle, weekly backups, dependency scanning, and uptime monitoring. |
+| **Infrastructure** | Hostinger LiteSpeed Shared Hosting automation: handled PHP `symlink()` restrictions via Linux shell, injected dynamic HTTP Basic Auth, and automated SSH over custom port 65002. |
+| **Security** | Audited dependencies using `composer audit --locked` and `npm audit`. Resolved 5 high-severity frontend CVEs via `npm audit fix`. |
+| **Observability** | Integrated Sentry Cloud for real-time error tracking and configured automated HTTP status pings every 6 hours. |
 
 ---
 
-## 🗂️ Struktur Direktori Portofolio
+## Screenshots
+
+| View | Description |
+| :--- | :--- |
+| ![Landing Page](assets/screenshots/01_landing_page.png) | **Public Portal**: Informational landing page and public subsidy status lookup by NIK. |
+| ![Dashboard](assets/screenshots/04_dashboard.png) | **Admin Dashboard**: Aggregated statistics and monthly member growth metrics. |
+| ![Member Management](assets/screenshots/05_anggota_index.png) | **Member Directory**: Paginated member records with selective column projections. |
+| ![Digital Member Card](assets/screenshots/09_anggota_kta.png) | **PDF Generation**: Dompdf-rendered member card with dynamic barcodes. |
+| ![Inventory Management](assets/screenshots/32_inventaris_index.png) | **Inventory & Assets**: Asset tracking with PDF and Excel export capabilities. |
+| ![Letter Archiving](assets/screenshots/24_surat_masuk_index.png) | **Document Archiving**: Incoming and outgoing letter management with file uploads. |
+
+---
+
+## Directory Structure
 
 ```text
 simkodes-qa-devops-portfolio/
-├── README.md                          # Master Portofolio Dokumentasi
-├── .github/workflows/                 # 7 Workflow Modular GitHub Actions
-│   ├── ci.yml                         # Automated Testing (PHPUnit & Playwright Chromium)
-│   ├── staging.yml                    # Automated Deployment ke Staging dengan Basic Auth
-│   ├── production.yml                 # Protected Release Pipeline (Gate: "DEPLOY")
-│   ├── maintenance.yml                # Remote SSH Toggle artisan down / up
-│   ├── backup.yml                     # Automated MySQL Dump & GitHub Artifacts (30 Hari)
-│   ├── security.yml                   # Scheduled Composer & NPM CVE Dependency Scanning
-│   └── monitoring.yml                 # Synthetic HTTP Health Check Ping (Tiap 6 Jam)
-├── e2e-automation/                    # Framework Otomasi Pengujian Playwright E2E
-│   ├── package.json                   # Konfigurasi dependensi runner Playwright
-│   ├── playwright.config.ts           # Konfigurasi multi-browser, reporter HTML, dan viewport
-│   ├── pages/                         # Page Object Model (POM) Berorientasi Objek
-│   │   ├── LoginPage.ts               # Enkapsulasi login, form handling & error alert
-│   │   ├── DashboardPage.ts           # Enkapsulasi widget metrik statistik
-│   │   ├── MemberPage.ts              # Enkapsulasi tabel anggota & modal pendaftaran
-│   │   ├── InventoryPage.ts           # Enkapsulasi buku barang & tombol ekspor
-│   │   ├── OfficerPage.ts             # Enkapsulasi struktur pengurus & pengawas
-│   │   ├── LetterPage.ts              # Enkapsulasi arsip surat masuk & keluar
-│   │   └── ReportPage.ts              # Enkapsulasi filter rekapitulasi subsidi
-│   └── tests/                         # Skenario Pengujian Fungsional E2E
-│       ├── 01_auth.spec.ts            # Validasi form login & penolakan password salah
-│       ├── 02_dashboard.spec.ts       # Verifikasi metrik analitik dashboard
-│       ├── 03_master_data.spec.ts     # Pengujian CRUD kategori & anggota
-│       ├── 04_officers.spec.ts        # Pengujian data pengurus & dewan pengawas
-│       ├── 05_letters.spec.ts         # Pengujian upload berkas surat masuk/keluar
-│       ├── 06_inventory.spec.ts       # Pengujian ekspor dokumen inventaris PDF/Excel
-│       └── 07_reports.spec.ts         # Pengujian rekapitulasi penyaluran subsidi
-├── performance-testing/               # Pengujian Beban & Stress Testing K6
-│   ├── k6-load-test.js                # Skenario pengujian beban 100 Virtual Users
+├── .github/workflows/                 # 7 Modular GitHub Actions Workflows
+│   ├── ci.yml                         # Automated Testing (PHPUnit + Playwright headless)
+│   ├── staging.yml                    # Automated deploy to Staging with Basic Auth injection
+│   ├── production.yml                 # Guarded Production release (requires "DEPLOY" input)
+│   ├── maintenance.yml                # Remote SSH toggle for artisan down / up
+│   ├── backup.yml                     # Scheduled weekly mysqldump with 30-day artifact retention
+│   ├── security.yml                   # Automated Composer & NPM CVE scanning
+│   └── monitoring.yml                 # Synthetic HTTP health check ping (runs every 6h)
+├── e2e-automation/                    # Standalone Playwright Test Framework
+│   ├── playwright.config.ts           # Browser matrix, HTML reporter, and video/trace settings
+│   ├── pages/                         # Page Object Model (POM) classes
+│   │   ├── LoginPage.ts
+│   │   ├── DashboardPage.ts
+│   │   ├── MemberPage.ts
+│   │   ├── InventoryPage.ts
+│   │   ├── OfficerPage.ts
+│   │   ├── LetterPage.ts
+│   │   └── ReportPage.ts
+│   └── tests/                         # E2E test specs
+│       ├── 01_auth.spec.ts
+│       ├── 02_dashboard.spec.ts
+│       ├── 03_master_data.spec.ts
+│       ├── 04_officers.spec.ts
+│       ├── 05_letters.spec.ts
+│       ├── 06_inventory.spec.ts
+│       └── 07_reports.spec.ts
+├── performance-testing/               # Load & Stress Testing (K6)
+│   ├── k6-load-test.js                # Load test script (ramping up to 100 VUs)
 │   └── reports/
-│       └── performance-analysis.md    # Laporan analisis latensi, throughput, dan SQL N+1
-├── security-audit/                    # Keamanan Siber & Kepatuhan Dependensi
-│   ├── security-matrix.md             # Matriks Mitigasi OWASP Top 10 pada SIMKODES
+│       └── performance-analysis.md    # Detailed benchmark analysis and N+1 query metrics
+├── security-audit/                    # Security Documentation & Tools
+│   ├── security-matrix.md             # OWASP Top 10 mitigation notes for SIMKODES
 │   └── scripts/
-│       └── run-security-audit.sh      # Script otomasi pemindaian CVE Composer & NPM
-├── devops-infrastructure/             # Infrastruktur Hosting & Script Rekayasa DevOps
-│   ├── architecture-overview.md       # Arsitektur Staging vs Production & Solusi Shared Hosting
+│       └── run-security-audit.sh      # Shell script to run composer & npm audits
+├── devops-infrastructure/             # Infrastructure & Deployment Automation
+│   ├── architecture-overview.md       # Staging vs Production setup & shared hosting workarounds
 │   └── scripts/
-│       ├── remote-maintenance.sh      # Remote artisan down/up dengan bypass secret
-│       └── automated-mysql-backup.sh  # Script dump MySQL terkompresi .sql.gz
-├── test-strategy-docs/                # Dokumen Strategi Uji & Analisis Insiden
-│   ├── master-test-plan.md            # Rencana Induk Pengujian (Piramida Pengujian)
-│   └── bug-reports/                   # Laporan Root Cause Analysis (RCA) Insiden Nyata
-│       ├── BUG-001-route-collision-rca.md  # Analisis tabrakan route serialization
-│       └── BUG-002-sqlite-mysql-date-format-rca.md # Analisis query agnostik multi-database
-└── assets/screenshots/                # Galeri Tangkapan Layar Antarmuka SIMKODES
+│       ├── remote-maintenance.sh      # Artisan maintenance toggle with bypass secret
+│       └── automated-mysql-backup.sh  # Script to dump, compress, and rotate MySQL databases
+└── test-strategy-docs/                # Test Planning & Incident Post-Mortems
+    ├── master-test-plan.md            # Comprehensive test strategy across 7 QA pillars
+    └── bug-reports/                   # Root Cause Analysis (RCA) reports from actual incidents
+        ├── BUG-001-route-collision-rca.md
+        └── BUG-002-sqlite-mysql-date-format-rca.md
 ```
 
 ---
 
-## 📸 Galeri Tangkapan Layar & Bukti Pengujian
+## 1. Automated Testing Suite
 
-| Fitur & Skenario Uji | Bukti Visual Antarmuka |
-| :--- | :--- |
-| **Dashboard Metrik & Statistik**<br/>Ringkasan anggota, pengurus, inventaris, dan chart pertumbuhan bulanan. | ![Dashboard](assets/screenshots/04_dashboard.png) |
-| **Master Anggota & Generator KTA Digital**<br/>Pengujian pendaftaran anggota dan cetak kartu anggota (PDF ber-barcode). | ![Anggota](assets/screenshots/05_anggota_index.png)<br/>![KTA](assets/screenshots/09_anggota_kta.png) |
-| **Buku Inventaris & Ekspor Multi-Format**<br/>Pencatatan aset barang dengan ekspor laporan ke format **PDF & Excel**. | ![Inventaris](assets/screenshots/32_inventaris_index.png) |
-| **Pengarsipan Persuratan Digital**<br/>Pengujian upload berkas lampiran dokumen surat masuk dan surat keluar. | ![Surat Masuk](assets/screenshots/24_surat_masuk_index.png)<br/>![Surat Keluar](assets/screenshots/28_surat_keluar_index.png) |
-| **Penyaluran Bantuan & Subsidi Warga**<br/>Pencatatan penerima bantuan dan fitur pencarian mandiri via NIK warga. | ![Subsidi](assets/screenshots/38_subsidi_index.png)<br/>![Cek NIK](assets/screenshots/40_cek_subsidi.png) |
+### E2E Testing (Playwright with Page Object Model)
+All browser workflows are tested in headless Chromium, Firefox, and WebKit. Selectors and actions are encapsulated in reusable page classes under `e2e-automation/pages/`.
 
----
-
-## 🧪 1. Framework Otomasi E2E (Playwright & Page Object Model)
-
-Pengujian antarmuka menggunakan **Playwright** yang dirancang dengan pola arsitektur **Page Object Model (POM)** murni untuk memisahkan logic selektor HTML dari skenario uji.
-
-### Contoh Implementasi POM ([MemberPage.ts](e2e-automation/pages/MemberPage.ts)):
+Example POM implementation (`e2e-automation/pages/MemberPage.ts`):
 ```typescript
 export class MemberPage {
   constructor(private page: Page) {}
@@ -130,118 +114,146 @@ export class MemberPage {
 }
 ```
 
-### Keunggulan Desain:
-* **Auto-Wait & Resilient Selectors**: Mencegah *flaky tests* dengan mengandalkan auto-waiting Playwright.
-* **Multi-Browser & Cross-Platform**: Dikonfigurasi untuk Chromium, Firefox, WebKit (Safari), dan simulasi Mobile Pixel 5.
-* **CI Integration**: Terintegrasi pada GitHub Actions (`ci.yml`) dengan pelaporan HTML artifact dan rekaman video otomatis saat gagal.
+### Backend Testing (PHPUnit)
+79 tests covering:
+- Authentication, session timeouts, and role authorization.
+- RESTful API endpoints with Sanctum token authentication and standard JSend responses (`success`, `code`, `message`, `data`, `meta`).
+- FormRequest validation rules returning HTTP 422 envelopes.
+- Multi-database compatibility (SQLite in CI, MySQL in Staging/Production).
 
 ---
 
-## ⚡ 2. Rekayasa Performa & Eliminasi N+1 Query
+## 2. Database Optimization & Query Efficiency
 
-Pada pengujian efisiensi database ([QueryEfficiencyTest.php](file:///c:/code/sranak/simkodes/tests/Feature/Api/QueryEfficiencyTest.php)), kami membuktikan secara matematis eliminasi masalah **N+1 Query**:
+### N+1 Query Problem Resolution
+Fetching 10 members with their categories originally executed 1 query for members plus 10 individual queries for each category (11 total queries).
 
+Using eager loading with selective column projection:
 ```php
-// Mengambil 10 anggota dengan relasi kategori HANYA boleh mengeksekusi 2 query SQL
-$members = Member::with(['category:id,name'])->paginate(10);
+$members = Member::with(['category:id,name'])
+    ->select(['id', 'category_id', 'nama', 'jenis_kelamin', 'mata_pencaharian', 'tempat_tinggal', 'tanggal_masuk', 'created_at'])
+    ->paginate(10);
 ```
 
-### Hasil Benchmark:
-- **Sebelum Optimasi**: 1 query anggota + 10 query kategori = **11 Query SQL**.
-- **Sesudah Optimasi**: 1 query anggota + 1 query eager loading `WHERE IN` = **2 Query SQL**.
-- **Efisiensi Beban Database**: **Turun 81.8%** secara konstan.
+Verified via automated test (`QueryEfficiencyTest.php`):
+- Query count dropped from **11 queries to 2 queries** (`WHERE IN`), an **81.8% reduction**.
+- Query count remains constant at 2 regardless of page size (50 or 100 items).
+
+### Indexing
+Added composite indexes to frequently queried columns:
+- `(nama, tanggal_masuk)` on `members`
+- `nama_barang` on `inventories`
+- `nik` on `subsidies`
 
 ---
 
-## ⚙️ 3. Arsitektur CI/CD 7 Workflow Modular
+## 3. CI/CD Architecture (GitHub Actions)
+
+The deployment pipeline is split into 7 modular workflows:
 
 ```mermaid
 flowchart TD
-    subgraph Quality Assurance Gate
-        PUSH["Developer Push / PR"] --> CI["ci.yml (79 PHPUnit + 12 Playwright)"]
+    subgraph Quality Assurance
+        PUSH["Push / PR (master, staging)"] --> CI["ci.yml (PHPUnit & Playwright)"]
         PUSH --> SEC["security.yml (Composer & NPM Audit)"]
     end
 
-    subgraph Staging CD
-        CI -->|Tests Pass| STG["staging.yml (CD Staging)"]
-        STG --> BAUTH["Inject OpenSSL HTTP Basic Auth"]
-        BAUTH --> RSYNC_STG["Rsync over SSH to simkodes-staging"]
+    subgraph Continuous Deployment
+        CI -->|Pass| STG["staging.yml (CD Staging)"]
+        STG --> BAUTH["Inject HTTP Basic Auth"]
+        BAUTH --> RSYNC_STG["Rsync to simkodes-staging"]
+
+        PROD_TRIGGER["Manual Dispatch: confirm_deploy='DEPLOY'"] --> PROD["production.yml (CD Live Production)"]
+        PROD --> RSYNC_PROD["Rsync to Live simkodes"]
     end
 
-    subgraph Production CD (Protected)
-        INPUT["Manual Trigger: confirm_deploy='DEPLOY'"] --> PROD["production.yml (CD Live)"]
-        PROD --> RSYNC_PROD["Rsync over SSH to live simkodes"]
-    end
-
-    subgraph Maintenance & Backup Operations
-        SCHEDULE_BCK["Weekly Cron 02:00 UTC"] --> BCK["backup.yml (MySQL Dump to Artifacts)"]
-        SCHEDULE_MON["Every 6 Hours Cron"] --> MON["monitoring.yml (Synthetic Ping)"]
-        ADMIN_OPS["Admin Manual Dispatch"] --> MAINT["maintenance.yml (Artisan Down/Up)"]
+    subgraph Operations & Monitoring
+        WEEKLY["Weekly Cron"] --> BCK["backup.yml (MySQL Dump to Artifacts)"]
+        CRON_6H["Every 6 Hours"] --> MON["monitoring.yml (HTTP Ping)"]
+        MANUAL_OPS["Manual Trigger"] --> MAINT["maintenance.yml (Artisan Down/Up)"]
     end
 ```
 
-### Fitur Kunci DevOps:
-1. **Bypass Batasan PHP `symlink()`**: Mengatasi pembatasan `php.ini` shared hosting via Linux shell link `cd public && ln -sfn ../storage/app/public storage`.
-2. **Proteksi Staging Dinamis**: Injeksi otomatis `.htpasswd` via `openssl passwd -apr1` di CI sebelum proses deployment.
-3. **Multi-Secret Fallback**: Mendukung nama secret `HOSTINGER_SSH_*` maupun `SSH_*` dengan default port `65002` untuk mencegah error `Bad port '-H'`.
-4. **Disaster Recovery Terjadwal**: Otomasi `mysqldump --single-transaction --quick | gzip` mingguan yang diunduh ke runner dan disimpan selama 30 hari di GitHub Actions Artifacts.
+### Shared Hosting Engineering Solutions
+Deploying to Hostinger LiteSpeed shared hosting required solving three main constraints:
+1. **PHP `symlink()` is disabled**: `php artisan storage:link` fails. Solved by creating the symlink directly in the deployment shell script:
+   ```bash
+   cd public && ln -sfn ../storage/app/public storage || true
+   ```
+2. **Staging Environment Protection**: Staging must not be publicly accessible. The CI workflow generates an `.htpasswd` file dynamically using `openssl passwd -apr1` and injects Basic Auth directives into `.htaccess` before rsyncing.
+3. **SSH Port 65002**: Hostinger uses custom SSH port `65002`. Workflows define job-level environment variables with fallback logic:
+   ```yaml
+   env:
+     SSH_PORT: ${{ secrets.HOSTINGER_SSH_PORT || secrets.SSH_PORT || '65002' }}
+     SSH_HOST: ${{ secrets.HOSTINGER_SSH_HOST || secrets.SSH_HOST || '195.35.48.228' }}
+     SSH_USER: ${{ secrets.HOSTINGER_SSH_USER || secrets.SSH_USER || 'u849825724' }}
+   ```
+4. **Guarded Production Release**: `production.yml` requires typing `"DEPLOY"` in the workflow input dialog. Push and PR triggers are disabled to prevent accidental deployments.
 
 ---
 
-## 🛡️ 4. Keamanan & Kepatuhan Dependensi (OWASP Top 10)
+## 4. Performance Benchmarks (K6)
 
-Melalui workflow otomatis [security.yml](.github/workflows/security.yml), sistem memindai kerentanan CVE secara berkala:
-- **Backend (PHP)**: `composer audit --locked` memindai seluruh paket terhadap basis data *GitHub Advisory Database*.
-- **Frontend (Node.js)**: `npm audit --audit-level=high` memindai paket build tools (Vite, Rollup, PostCSS). Berhasil menambal **5 kerentanan level *High*** pada dependensi frontend.
+Load test ran with `performance-testing/k6-load-test.js` against staging endpoints:
 
----
+| Metric | Result | Target Threshold |
+| :--- | :---: | :---: |
+| **Virtual Users (VUs)** | 100 concurrent | 50 - 100 |
+| **Total Requests** | 4,820 requests | - |
+| **Average Latency** | 64.12 ms | < 200 ms |
+| **Median (P50)** | 48.60 ms | < 100 ms |
+| **95th Percentile (P95)** | 142.80 ms | < 500 ms |
+| **Failed Requests** | 0.00% (0 errors) | < 1.00% |
 
-## 🔍 5. Laporan Root Cause Analysis (RCA) Insiden Nyata
-
-Sebagai bukti kemampuan pemecahan masalah (*troubleshooting*) tingkat lanjut, portofolio ini menyertakan dokumentasi penanganan insiden teknis:
-
-* [**BUG-001: Route Serialization Naming Collision**](test-strategy-docs/bug-reports/BUG-001-route-collision-rca.md)  
-  *Masalah*: `LogicException: Unable to prepare route [members] for serialization` saat eksekusi `php artisan route:cache`.  
-  *Akar Masalah*: Tabrakan nama route implisit antara `Route::apiResource('members')` dan `routes/web.php`.  
-  *Solusi*: Penambahan namespaced group prefix `->name('api.')` pada seluruh API route.
-
-* [**BUG-002: SQLite vs MySQL Dialect Incompatibility**](test-strategy-docs/bug-reports/BUG-002-sqlite-mysql-date-format-rca.md)  
-  *Masalah*: HTTP 500 pada pengujian dashboard di GitHub Actions Ubuntu runner.  
-  *Akar Masalah*: Penggunaan fungsi raw SQL `DATE_FORMAT()` yang tidak didukung SQLite in-memory.  
-  *Solusi*: Implementasi driver detection agnostik menggunakan `DB::connection()->getDriverName()` dan fungsi `strftime`.
+Detailed data is available in [performance-analysis.md](performance-testing/reports/performance-analysis.md).
 
 ---
 
-## 🚀 Cara Menjalankan Pengujian di Mesin Lokal
+## 5. Incident Root Cause Analysis (RCAs)
 
-### 1. Menjalankan Suite Playwright E2E:
+Two technical post-mortems documenting real issues encountered and resolved:
+
+1. [**BUG-001: Route Serialization Naming Collision**](test-strategy-docs/bug-reports/BUG-001-route-collision-rca.md)  
+   *Symptom*: `LogicException: Unable to prepare route [members] for serialization` during `php artisan route:cache`.  
+   *Root Cause*: `Route::apiResource('members')` implicitly assigned the name `members.index`, colliding with the web route in `routes/web.php`.  
+   *Fix*: Scoped all API routes under `->name('api.')`.
+
+2. [**BUG-002: SQLite vs MySQL Dialect Incompatibility**](test-strategy-docs/bug-reports/BUG-002-sqlite-mysql-date-format-rca.md)  
+   *Symptom*: HTTP 500 in `DashboardController` when running tests on the SQLite CI runner.  
+   *Root Cause*: MySQL-specific `DATE_FORMAT()` function was called in raw SQL.  
+   *Fix*: Added dynamic driver detection: `strftime('%Y-%m', created_at)` for SQLite and `DATE_FORMAT()` for MySQL.
+
+---
+
+## How to Run Locally
+
+### Run E2E Tests (Playwright)
 ```bash
 cd e2e-automation
 npm install
 npx playwright install --with-deps chromium
 
-# Jalankan seluruh tes E2E
+# Run all tests headless
 npm test
 
-# Jalankan dengan antarmuka interaktif (Debug Mode)
+# Run with interactive UI
 npm run test:ui
 ```
 
-### 2. Menjalankan K6 Performance Test:
+### Run Load Tests (K6)
 ```bash
-# Pastikan k6 sudah terpasang (https://k6.io)
+# Requires k6 installed (https://k6.io)
 k6 run performance-testing/k6-load-test.js
 ```
 
-### 3. Menjalankan Security Audit:
+### Run Security Audit
 ```bash
 bash security-audit/scripts/run-security-audit.sh
 ```
 
 ---
 
-## 📬 Kontak & Kolaborasi
+## Author
 
-Portofolio ini disusun dan dikembangkan oleh **Muhamad Rofii**.  
-- **GitHub**: [@muhamadrofii](https://github.com/muhamadrofii)  
-- **Spesialisasi**: QA Automation, Performance Engineering, DevOps & CI/CD Pipelines.
+**Muhamad Rofii**  
+GitHub: [@muhamadrofii](https://github.com/muhamadrofii)

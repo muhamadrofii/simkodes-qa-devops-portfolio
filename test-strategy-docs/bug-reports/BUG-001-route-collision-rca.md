@@ -1,58 +1,52 @@
-# 🐛 Incident & Root Cause Analysis (RCA): BUG-001
+# Root Cause Analysis (RCA): BUG-001
 
 **ID**: BUG-001  
-**Judul**: `LogicException: Unable to prepare route [members] for serialization. Another route has already been assigned name [members.index]`  
-**Tingkat Keparahan**: Critical (Memblokir Deployment / Route Caching)  
-**Lingkungan Terkena**: CI/CD Staging Deployment Pipeline  
-**Penyelidik / Engineer**: Muhamad Rofii  
+**Title**: `LogicException: Unable to prepare route [members] for serialization. Another route has already been assigned name [members.index]`  
+**Severity**: Critical (Deployment Blocker)  
+**Environment**: CI/CD Staging Deployment Pipeline  
+**Investigator**: Muhamad Rofii  
 
 ---
 
-## 1. Deskripsi Gejala Masalah
-Saat pipeline deployment GitHub Actions mengeksekusi step post-deploy `php artisan route:cache`, proses kompilasi gagal secara mendadak dengan stack trace:
+## 1. Problem Description
+During post-deployment execution of `php artisan route:cache`, the command aborted with the following stack trace:
 ```text
 LogicException: Unable to prepare route [members] for serialization. Another route has already been assigned name [members.index].
 #0 /vendor/laravel/framework/src/Illuminate/Routing/AbstractRouteCollection.php(247): ...
 #5 /vendor/laravel/framework/src/Illuminate/Foundation/Console/RouteCacheCommand.php(109): ...
 ```
-Error ini tertangkap dan dicatat oleh sistem monitoring **Sentry Cloud** sebagai unhandled exception.
+The failure was captured in Sentry Cloud as an unhandled exception during the release pipeline.
 
 ---
 
-## 2. Analisis Akar Masalah (Root Cause Analysis)
-Terjadi tabrakan penamaan route (*route naming collision*) antara route antarmuka web dan route RESTful API:
-1. **Route Web** (`routes/web.php`):
+## 2. Root Cause
+A route naming collision occurred between web routes and API routes:
+1. **Web Route** (`routes/web.php`):
    ```php
    Route::get('/members', [MemberController::class, 'index'])->name('members.index');
    ```
-2. **Route API** (`routes/api.php`):
+2. **API Route** (`routes/api.php`):
    ```php
    Route::apiResource('members', MemberController::class);
    ```
-   Secara *default*, method `apiResource('members', ...)` di Laravel secara implisit menamai rute index-nya sebagai `members.index`.
-3. Ketika Laravel mengeksekusi `route:cache`, compiler route collection melakukan iterasi dan menemukan dua entri berbeda yang berbagi nama route `members.index`. Hal ini memicu `LogicException` karena serialization membutuhkan nama route yang unik 100%.
+   By default, `Route::apiResource('members', ...)` implicitly assigns resource names (`members.index`, `members.store`, `members.show`, etc.).
+3. During route caching, Laravel's route collection compiler requires unique route names for serialization. Because two separate routes registered under the name `members.index`, compilation threw a `LogicException`.
 
 ---
 
-## 3. Tindakan Perbaikan (Resolution)
-Menambahkan prefix penamaan grup `->name('api.')` pada seluruh rute API yang dilindungi di `routes/api.php`:
+## 3. Resolution
+Scoped all protected API routes under the `api.` name prefix:
 
 ```php
 // routes/api.php
 Route::middleware('auth:sanctum')->name('api.')->group(function () {
     Route::apiResource('members', MemberController::class);
-    // Otomatis menjadi: api.members.index, api.members.store, api.members.show, dst.
+    // Generates: api.members.index, api.members.store, api.members.show, etc.
 });
 ```
 
 ---
 
-## 4. Verifikasi & Dampak
-- Eksekusi `php artisan route:cache` berhasil dengan output `INFO Routes cached successfully.`.
-- Seluruh 79 tes PHPUnit dan 12 Playwright E2E tetap lulus 100%.
-- Tidak ada breaking changes pada route web publik maupun internal.
-
----
-
-## 5. Pelajaran yang Dipetik (Lessons Learned)
-Selalu gunakan *namespaced route naming* (`api.*`, `admin.*`, `web.*`) saat membangun aplikasi monolitik hibrida yang menyediakan antarmuka web (Blade) sekaligus REST API JSON.
+## 4. Verification
+- `php artisan route:cache` executed successfully: `INFO Routes cached successfully.`.
+- All 79 PHPUnit tests and 12 Playwright E2E tests passed with zero regressions.

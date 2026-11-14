@@ -1,28 +1,28 @@
-# 📋 Master Test Plan & Quality Assurance Strategy
+# Master Test Plan & QA Strategy
 
-**Aplikasi**: SIMKODES (Sistem Informasi Manajemen Koperasi Desa Sranak)  
-**Tujuan Dokumen**: Panduan strategi pengujian menyeluruh berbasis 7 Pilar QA Industri  
-**Penyusun**: Muhamad Rofii (QA Automation & DevOps Engineer)  
-
----
-
-## 1. Lingkup Pengujian (Scope of Testing)
-
-### A. Fitur Dalam Lingkup (In-Scope)
-1. **Autentikasi & Otorisasi**: Login sesi web, validasi password, proteksi guest, dan Sanctum Bearer Token API.
-2. **Master Data Anggota & Cetak KTA**: Operasi CRUD, validasi NIK/nama/kontak, dan generasi dokumen fisik KTA PDF berstandar cetak.
-3. **Struktur Pengurus & Pengawas**: Pencatatan dewan koperasi, upload pas foto, tanda tangan digital, dan KTA pengurus.
-4. **Pengarsipan Persuratan**: Upload dan download lampiran PDF berkas Surat Masuk dan Surat Keluar.
-5. **Inventaris & Manajemen Aset**: Pencatatan barang, kalkulasi jumlah/harga, dan ekspor multi-format (PDF & XLSX).
-6. **Bantuan & Subsidi Warga**: Verifikasi kelayakan NIK penerima subsidi, rekapitulasi bantuan, dan filter rentang tanggal laporan.
-7. **RESTful API**: Format respons standar JSend Envelope, kode status HTTP konsisten (200, 201, 401, 404, 422).
-8. **Efisiensi Database**: Eliminasi query N+1 dan pengujian indeks pencarian.
+**Project**: SIMKODES (Sistem Informasi Manajemen Koperasi Desa Sranak)  
+**Author**: Muhamad Rofii  
+**Standard**: Agile Testing & Test Pyramid  
 
 ---
 
-## 2. Pendekatan Piramida Pengujian (Test Pyramid Strategy)
+## 1. Scope of Testing
 
-```
+### In-Scope Features
+1. **Authentication & Authorization**: Web session login, password validation, guest redirection, and Sanctum Bearer token API.
+2. **Member Management & Digital Cards**: CRUD operations, NIK/name validation, and Dompdf member card (KTA) generation.
+3. **Officer & Supervisor Directory**: Cooperative board records, image uploads, digital signatures, and officer card generation.
+4. **Letter Archiving**: PDF and image uploads for incoming and outgoing letters.
+5. **Inventory & Asset Tracking**: Item catalog, quantity/pricing calculation, and PDF/Excel export.
+6. **Subsidies & Public Service**: Beneficiary verification, public NIK lookup, and date-range report filtering.
+7. **RESTful API**: Standard JSend responses (`success`, `code`, `message`, `data`, `meta`) with standard HTTP status codes (200, 201, 401, 404, 422).
+8. **Database Efficiency**: N+1 query elimination and search index coverage.
+
+---
+
+## 2. Test Pyramid Strategy
+
+```text
         / \
        /   \      12 Playwright E2E Tests (End-to-End User Journeys)
       / E2E \     - Login, Dashboard Stats, CRUD Form, Modal & PDF Download
@@ -37,7 +37,7 @@
 
 ---
 
-## 3. Matriks Lingkungan Uji (Test Environments)
+## 3. Test Environments
 
 | Parameter | Local Testing | CI Runner Testing | Staging (Pre-Prod) | Production |
 | :--- | :--- | :--- | :--- | :--- |
@@ -48,16 +48,16 @@
 
 ---
 
-## 4. Kriteria Masuk & Keluar (Entry & Exit Criteria)
+## 4. Entry & Exit Criteria
 
-### A. Kriteria Masuk (Entry Criteria)
-- Kode lolos kompilasi Vite (`npm run build`).
-- Dependency bersih dari kerentanan kritis (`composer audit --locked` & `npm audit`).
-- Migrasi database dan seeder berjalan tanpa error.
+### Entry Criteria
+- Frontend assets compile successfully (`npm run build`).
+- Dependency check passes without critical CVEs (`composer audit --locked` & `npm audit`).
+- Database migrations and seeders execute cleanly.
 
-### B. Kriteria Keluar (Exit Criteria)
-- **100% PHPUnit Test Suite Lulus** (79/79 Passed).
-- **100% Playwright E2E Test Suite Lulus** (12/12 Passed).
-- **Zero Critical / Blocker Defects** tercatat di issue tracker.
-- **Waktu Eksekusi Query Bebas N+1** pada seluruh endpoint daftar data.
-- **Persetujuan UAT** oleh tim pengurus koperasi desa di Staging.
+### Exit Criteria
+- **100% PHPUnit Test Suite Passing** (79/79 passed, 468 assertions).
+- **100% Playwright E2E Suite Passing** (12/12 passed, 7 specs).
+- **Zero Blocker / Critical Defects** in issue tracker.
+- **N+1 Query Elimination Verified** on all listing endpoints.
+- **UAT Sign-off** on the Staging environment.
