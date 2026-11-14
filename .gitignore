@@ -1,0 +1,16 @@
+# Node & Playwright
+node_modules/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# Backups & Temp files
+*.sql.gz
+backups/
+backups_temp/
+*.log
+.env
+.env.local
+.DS_Store
+Thumbs.db
