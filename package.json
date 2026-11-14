@@ -1,0 +1,14 @@
+{
+  "name": "simkodes-qa-devops-portfolio",
+  "version": "1.0.0",
+  "description": "Enterprise QA Automation & DevOps Engineering Portfolio for SIMKODES ERP",
+  "private": true,
+  "workspaces": [
+    "e2e-automation"
+  ],
+  "scripts": {
+    "test": "npm --prefix e2e-automation run test",
+    "test:staging": "npm --prefix e2e-automation run test:staging",
+    "build": "echo 'Build OK'"
+  }
+}
