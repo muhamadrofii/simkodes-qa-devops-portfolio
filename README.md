@@ -2,7 +2,7 @@
 
 [![Playwright](https://img.shields.io/badge/Playwright-E2E%20Testing-2EAD33?style=flat-square&logo=playwright&logoColor=white)](https://playwright.dev/)
 [![PHPUnit](https://img.shields.io/badge/PHPUnit-79%20Tests%20Passed-3775A9?style=flat-square&logo=php&logoColor=white)](https://phpunit.de/)
-[![GitHub Actions](https://img.shields.io/badge/CI%2FCD-8%20Workflows-2088FF?style=flat-square&logo=githubactions&logoColor=white)](.github/workflows/)
+[![GitHub Actions](https://img.shields.io/badge/CI%2FCD-8%20Workflows-2088FF?style=flat-square&logo=githubactions&logoColor=white)](devops-infrastructure/workflows/)
 [![K6 Load Testing](https://img.shields.io/badge/K6-Load%20Tested-7D64FF?style=flat-square&logo=k6&logoColor=white)](performance-testing/)
 [![Security Audit](https://img.shields.io/badge/Security-Composer%20%26%20NPM%20Audit-2ea44f?style=flat-square&logo=shield&logoColor=white)](security-audit/)
 [![Sentry](https://img.shields.io/badge/Monitoring-Sentry%20Tracked-362D59?style=flat-square&logo=sentry&logoColor=white)](https://sentry.io/)
@@ -43,14 +43,20 @@ A portfolio case study covering test automation, database query optimization, an
 
 ```text
 simkodes-qa-devops-portfolio/
-├── .github/workflows/                 # 7 Modular GitHub Actions Workflows
-│   ├── ci.yml                         # Automated Testing (PHPUnit + Playwright headless)
-│   ├── staging.yml                    # Automated deploy to Staging with Basic Auth injection
-│   ├── production.yml                 # Guarded Production release (requires "DEPLOY" input)
-│   ├── maintenance.yml                # Remote SSH toggle for artisan down / up
-│   ├── backup.yml                     # Scheduled weekly mysqldump with 30-day artifact retention
-│   ├── security.yml                   # Automated Composer & NPM CVE scanning
-│   └── monitoring.yml                 # Synthetic HTTP health check ping (runs every 6h)
+├── .github/workflows/                 # Quality Gate CI Workflow
+│   └── ci.yml                         # Automated E2E Verification & Test Suite Integrity Check
+├── devops-infrastructure/             # Production CI/CD & Infrastructure Architecture
+│   ├── architecture-overview.md       # Architecture Documentation & Hostinger Constraints
+│   ├── scripts/                       # Operational Shell Scripts (Backup, Maintenance)
+│   └── workflows/                     # 8 Modular Production Deployment Workflows
+│       ├── ci.yml                     # Full Laravel CI Quality Gate (PHPUnit + Playwright)
+│       ├── staging.yml                # Automated Deploy to Staging with Dynamic Basic Auth
+│       ├── production.yml             # Guarded Production Release (Requires 'DEPLOY' Input)
+│       ├── db-seed.yml                # On-Demand Database Seeding (UserSeeder, CategorySeeder)
+│       ├── maintenance.yml            # Remote SSH Toggle for artisan down / up
+│       ├── backup.yml                 # Scheduled Weekly mysqldump with 30-Day Retention
+│       ├── security.yml               # Automated Composer & NPM CVE Scanning
+│       └── monitoring.yml             # Synthetic HTTP Health Check Ping (Runs Every 6h)
 ├── e2e-automation/                    # Standalone Playwright Test Framework
 │   ├── playwright.config.ts           # Browser matrix, HTML reporter, and video/trace settings
 │   ├── pages/                         # Page Object Model (POM) classes
