@@ -78,6 +78,34 @@ Hostinger shared hosting runs on LiteSpeed Enterprise without root access, custo
   ```
   This ensures `ssh-keyscan` always receives a valid port integer and host string.
 
+### D. Pre-Deployment Automatic Database Snapshot (Zero Data Loss)
+* **Constraint**: Live production upgrades must guarantee zero data loss with instant rollback capability if a schema migration fails.
+* **Fix**: Before rsyncing code or running migrations, the pipeline SSHs into the server and creates an automated compressed dump:
+  ```bash
+  mysqldump -u $DB_USER -p$DB_PASS $DB_NAME | gzip > ~/backups/pre_deploy_$(date +%Y%m%d_%H%M%S).sql.gz
+  ```
+
+### E. Self-Healing Environment Recovery (.env Protection)
+* **Constraint**: During infrastructure migrations or folder reorganizations (e.g., migrating from `core/` to `/public_html/simkodes/`), missing `.env` files cause HTTP 500 errors.
+* **Fix**: The post-deploy automation script verifies and auto-recovers the environment file:
+  ```bash
+  if [ ! -f .env ]; then
+    if [ -f /home/u849825724/domains/sranak.com/public_html/core/.env ]; then
+      cp /home/u849825724/domains/sranak.com/public_html/core/.env .env
+    elif [ -f .envprod ]; then
+      cp .envprod .env
+    fi
+  fi
+  ```
+
+### F. Branded SIMKODES Maintenance Pre-Rendering (HTTP 503)
+* **Constraint**: Unstyled 503 text ("503 | Service Unavailable") degrades user trust during schema migration.
+* **Fix**: The pipeline activates maintenance with `--render="errors.503"`:
+  ```bash
+  php artisan down --render="errors.503" || true
+  ```
+  This serializes a fully styled, self-contained HTML page into `storage/framework/down`, served instantly by LiteSpeed with a rotating cog animation and a 30-second countdown auto-refresh.
+
 ---
 
 ## 3. Environment Matrix
@@ -85,8 +113,8 @@ Hostinger shared hosting runs on LiteSpeed Enterprise without root access, custo
 | Parameter | Staging Environment | Production Environment |
 | :--- | :--- | :--- |
 | **URL** | `https://simkodes-staging.sranak.com` | `https://simkodes.sranak.com` |
-| **Server Directory** | `/home/u849825724/domains/sranak.com/public_html/simkodes-staging/` | `/home/u849825724/domains/sranak.com/public_html/simkodes/` |
+| **Server Directory** | `/home/u849825724/domains/sranak.com/public_html/simkodes-staging/` | `/home/u849825724/domains/sranak.com/public_html/simkodes/` *(Migrated from `core/`)* |
 | **Access Control** | HTTP Basic Auth (`.htpasswd`) | Public & Authenticated Users |
 | **Release Trigger** | Automatic on push to `master` or `staging` | Manual `workflow_dispatch` with confirmation input `"DEPLOY"` |
-| **Database** | `u849825724_simkodes_staging` | `u849825724_simkodes_prod` |
+| **Database** | `u849825724_simkodes_staging` | `u849825724_kdmp` *(Hostinger MySQL, 0% data loss)* |
 | **Optimization** | `php artisan optimize` | `php artisan optimize` |

@@ -20,7 +20,8 @@ A portfolio case study covering test automation, database query optimization, an
 | **Database Optimization** | Eliminated N+1 query bottlenecks on member listings (reduced from 11 queries to 2 constant queries, -81.8%). Added B-tree and composite indexing. |
 | **Load Testing** | Benchmarked with K6 at 100 concurrent virtual users: P95 latency of **142 ms**, average **64 ms**, 0% error rate. |
 | **CI/CD Architecture** | 8 modular GitHub Actions workflows covering CI quality gate, Staging deploy with Basic Auth, guarded Production deploy, dedicated database seeder operations, maintenance toggle, weekly backups, dependency scanning, and uptime monitoring. |
-| **Infrastructure** | Hostinger LiteSpeed Shared Hosting automation: handled PHP `symlink()` restrictions via Linux shell, injected dynamic HTTP Basic Auth, and automated SSH over custom port 65002. |
+| **Infrastructure** | Hostinger LiteSpeed Shared Hosting automation: handled PHP `symlink()` restrictions via Linux shell, injected dynamic HTTP Basic Auth, automated SSH over custom port 65002, and migrated production to `/public_html/simkodes/` with zero data loss. |
+| **UI Modernization** | Replaced external SweetAlert2 dependencies with native Bootstrap 5 interactive modals (`modal-notification.blade.php`), and separated error styling into `public/css/errors.css`. |
 | **Security** | Audited dependencies using `composer audit --locked` and `npm audit`. Resolved 5 high-severity frontend CVEs via `npm audit fix`. |
 | **Observability** | Integrated Sentry Cloud for real-time error tracking and configured automated HTTP status pings every 6 hours. |
 
@@ -196,6 +197,9 @@ Deploying to Hostinger LiteSpeed shared hosting required solving three main cons
      SSH_USER: ${{ secrets.HOSTINGER_SSH_USER || secrets.SSH_USER || 'u849825724' }}
    ```
 4. **Guarded Production Release**: `production.yml` requires typing `"DEPLOY"` in the workflow input dialog. Push and PR triggers are disabled to prevent accidental deployments.
+5. **Zero Data Loss Pre-Deploy Snapshot**: Before transferring code or executing migrations, the pipeline automatically takes a compressed MySQL dump (`mysqldump ... | gzip`) into `~/backups/` for instant rollback capability.
+6. **Self-Healing Environment Recovery**: Post-deployment steps automatically detect and restore `.env` configurations if missing during server root migrations (e.g., migrating from legacy `core/` to `/public_html/simkodes/`).
+7. **Pre-rendered Branded 503 Maintenance**: Activates maintenance via `php artisan down --render="errors.503"` with modular CSS (`public/css/errors.css`), displaying a branded SIMKODES Navy status view with a 30-second countdown auto-refresh.
 
 ---
 
